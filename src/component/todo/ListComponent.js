@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useCustomMove from '../../hooks/useCustomMove';
 import { getList } from '../../api/todoApi';
+import PageComponent from '../common/PageComponent';
 
 
 //서버에서 받아올 정보
@@ -22,7 +23,7 @@ const initState ={
 
 const ListComponent = () =>{
     
-    const {page,size} =useCustomMove()
+    const {page,size, refresh, moveToList, moveToRead} =useCustomMove()
 
     const [serverData, setServerData] =  useState(initState)
 
@@ -32,7 +33,7 @@ const ListComponent = () =>{
             setServerData(data)
         })
 
-    },  [page,size])
+    },  [page,size , refresh])
 
     //ajax 통신
     //서버 사이드에서 필요한 정보를 전부 받아오기 때문에 받으면 문제X
@@ -48,6 +49,7 @@ const ListComponent = () =>{
                 <div
                     key= {todo.tno} 
                     className="w-full min-w-[400px]  p-2 m-2 rounded shadow-md"
+                    onClick={()=> moveToRead(todo.tno)}
                 >  
 
                     <div className='flex'>
@@ -65,8 +67,10 @@ const ListComponent = () =>{
                 )}
                 
             </div>
+            <PageComponent serverData={serverData} movePage={moveToList}></PageComponent>
+
         </div>
-    )
+    );
 }
 
 export default ListComponent;
