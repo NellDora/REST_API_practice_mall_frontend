@@ -14,6 +14,10 @@ function AddComponent(props){
 
     const [todo, setTodo] = useState({...initState})
 
+    const [result, setResult] = useState(null);
+
+    const {moveToList} = useCustomMove()
+
     const handleChangeTodo = (e) => {
 
         todo[e.target.name] = e.target.value
@@ -23,11 +27,19 @@ function AddComponent(props){
 
     const handleClickAdd = () =>{
         console.log(todo)
-        postAdd(todo).then(data=>{
+        postAdd(todo).then(result=>{
           //{TNO:104}
+          setResult(result.TNO)
+          setTodo({...initState})
         })
     }
     
+    const closeModal = () => {
+      setResult(null) 
+      moveToList()
+    }
+
+
     return(
         <div className = "border-2 border-sky-200 mt-10 m-2 p-4"> 
    
@@ -80,6 +92,15 @@ function AddComponent(props){
            </div>
          </div>
 
+          {result ?
+          <ResultModal
+            title={'Add Result'}
+            content={`New ${result} Added`}
+            callbackFn={closeModal}
+          />
+          :
+          <></>
+        }
         
 
        </div>
